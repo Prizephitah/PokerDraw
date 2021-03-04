@@ -1,0 +1,20 @@
+{
+	"name": "prizephitah/poker-draw",
+	"description": "description",
+	"minimum-stability": "stable",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Björn Hjortsten",
+			"email": "bjornhjortsten@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Prizephitah\\PokerDraw\\": "src"
+		}
+	},
+	"require": {
+		
+	}
+}
