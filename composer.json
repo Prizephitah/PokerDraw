@@ -12,9 +12,19 @@
 	"autoload": {
 		"psr-4": {
 			"Prizephitah\\PokerDraw\\": "src"
+		},
+		"files": [
+			"src/array_shuffle.php"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Prizephitah\\PokerDraw\\Tests\\": "tests"
 		}
 	},
-	"require": {
-		
+	"require-dev": {
+		"ext-dom": "*",
+		"ext-zlib": "*",
+		"phpunit/phpunit": "^9.5"
 	}
 }
