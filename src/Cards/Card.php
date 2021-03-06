@@ -67,4 +67,15 @@ class Card
     public function __toString(): string {
         return Rank::shorten($this->getRank()).Suit::shorten($this->getSuit());
     }
+
+    public function equals($candidate): bool {
+        if (!($candidate instanceof Card)) {
+            return false;
+        }
+        if ($candidate->getRank() !== $this->getRank()
+            || $candidate->getSuit() !== $this->getSuit()) {
+            return false;
+        }
+        return true;
+    }
 }

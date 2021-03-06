@@ -6,7 +6,7 @@ namespace Prizephitah\PokerDraw\Cards;
 
 use function Prizephitah\PokerDraw\array_shuffle;
 
-class Deck
+class Deck implements \Countable
 {
     protected array $cards = [];
 
@@ -27,10 +27,11 @@ class Deck
     public function insert(Card $card): static {
         $place = random_int(0, count($this->cards));
         array_splice($this->cards, $place, 0, [$card]);
+        return $this;
     }
 
     public function bury(Card $card): static {
-        $this[] = $card;
+        $this->cards[] = $card;
         return $this;
     }
 
@@ -71,5 +72,14 @@ class Deck
             throw new EmptyDeckException();
         }
         return array_pop($this->cards);
+    }
+
+    public function count()
+    {
+        return count($this->cards);
+    }
+
+    public function toArray(): array {
+        return $this->cards;
     }
 }

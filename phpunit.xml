@@ -1,0 +1,16 @@
+<phpunit bootstrap="tests/bootstrap.php">
+    <testsuite name="unit">
+        <directory>tests</directory>
+    </testsuite>
+    <coverage>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+        <exclude>
+            <file>tests/bootstrap.php</file>
+        </exclude>
+        <report>
+            <html outputDirectory="tests/coverage" />
+        </report>
+    </coverage>
+</phpunit>
