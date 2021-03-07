@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Prizephitah\PokerDraw\Cards;
@@ -79,7 +80,20 @@ class Deck implements \Countable
         return count($this->cards);
     }
 
+    /**
+     * @return Card[]
+     */
     public function toArray(): array {
         return $this->cards;
+    }
+
+    public static function getStandard(): static {
+        $cards = [];
+        foreach (Suit::List as $suit) {
+            foreach (range(1, 13) as $rank) {
+                $cards[] = new Card($suit, $rank);
+            }
+        }
+        return new Deck($cards);
     }
 }

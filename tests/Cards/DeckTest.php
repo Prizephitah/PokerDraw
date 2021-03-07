@@ -132,4 +132,18 @@ class DeckTest extends TestCase
         $deck->draw();
         $deck->draw();
     }
+
+    public function testStandard() {
+        $deck = Deck::getStandard();
+        self::assertCount(52, $deck);
+        $cards = $deck->toArray();
+        for ($i = 0; $i < count($cards); $i++) {
+            for ($j = 0; $j < count($cards); $j++) {
+                if ($i === $j) {
+                    continue;
+                }
+                self::assertFalse($cards[$i]->equals($cards[$j]));
+            }
+        }
+    }
 }
