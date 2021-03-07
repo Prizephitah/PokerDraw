@@ -78,4 +78,18 @@ class Card
         }
         return true;
     }
+
+    /**
+     * Returns -1, 0 or 1 when the first card is respectively less then, equal to or, greater than the second card.
+     * @param Card $a
+     * @param Card $b
+     * @return int
+     */
+    public static function compare(Card $a, Card $b): int {
+        $rank = $a->getRank() <=> $b->getRank();
+        if ($rank !== 0) {
+            return $rank;
+        }
+        return array_search($a->getSuit(), Suit::List) <=> array_search($b->getSuit(), Suit::List);
+    }
 }
