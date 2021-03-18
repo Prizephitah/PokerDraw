@@ -86,7 +86,9 @@ class Card
      * @return int
      */
     public static function compare(Card $a, Card $b): int {
-        $rank = $a->getRank() <=> $b->getRank();
+        $aRank = $a->getRank() === Rank::Ace ? 14 : $a->getRank();
+        $bRank = $b->getRank() === Rank::Ace ? 14 : $b->getRank();
+        $rank = $aRank <=> $bRank;
         if ($rank !== 0) {
             return $rank;
         }

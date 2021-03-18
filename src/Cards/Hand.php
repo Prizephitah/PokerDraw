@@ -6,6 +6,17 @@ namespace Prizephitah\PokerDraw\Cards;
 
 class Hand
 {
+    public const RankRoyalFlush = 9;
+    public const RankStraightFlush = 8;
+    public const RankFourOfAKind = 7;
+    public const RankFullHouse = 6;
+    public const RankFlush = 5;
+    public const RankStraight = 4;
+    public const RankThreeOfAKind = 3;
+    public const RankTwoPairs = 2;
+    public const RankPairs = 1;
+    public const RankHighCard = 0;
+
     /** @var Card[] */
     protected array $cards;
 
@@ -40,13 +51,16 @@ class Hand
     }
 
     public function isStraight(): bool {
-        return $this->isNormalStraight() || $this->isRoyalStraight();
+        return $this->isNormalStraight();
     }
 
     protected function isNormalStraight(): bool {
         $start = $this->cards[0]->getRank();
         for ($i = 1; $i < 5; $i++) {
-            if ($this->cards[$i]->getRank() !== $start + $i) {
+            if ($this->cards[$i]->getRank() !== $start + $i &&
+                !($i === 4 && $this->cards[$i]->getRank() === Rank::Ace && $this->cards[3]->getRank() === Rank::King) &&
+                !($i === 4 && $this->cards[$i]->getRank() === Rank::Ace && $this->cards[0]->getRank() === Rank::Two)
+            ) {
                 return false;
             }
         }
@@ -54,15 +68,10 @@ class Hand
     }
 
     protected function isRoyalStraight(): bool {
-        if ($this->cards[0]->getRank() !== Rank::Ace) {
+        if ($this->cards[4]->getRank() !== Rank::Ace || $this->cards[3]->getRank() !== Rank::King) {
             return false;
         }
-        for ($i = 1; $i < 5; $i++) {
-            if ($this->cards[$i]->getRank() !== 9 + $i) {
-                return false;
-            }
-        }
-        return true;
+        return $this->isStraight();
     }
 
     public function isRoyalFlush(): bool {
@@ -100,5 +109,70 @@ class Hand
         }
         $counts = array_filter($counts);
         return max($counts) === 3 && min($counts) === 2;
+    }
+
+    public function isTwoPairs(): bool {
+        $counts = array_fill_keys(range(Rank::Ace, Rank::King), 0);
+        foreach ($this->cards as $card) {
+            $counts[$card->getRank()]++;
+        }
+        $counts = array_filter($counts);
+        return max($counts) === 2 && min($counts) === 1 && count($counts) === 3;
+    }
+
+    public function getHighCard(int $offset = 0): Card {
+        return $this->cards[4 - $offset];
+    }
+
+    public function getHandRank(): int {
+        if ($this->isRoyalFlush()) {
+            return self::RankRoyalFlush;
+        }
+        if ($this->isStraightFlush()) {
+            return self::RankStraightFlush;
+        }
+        if ($this->isFourOfAKind()) {
+            return self::RankFourOfAKind;
+        }
+        if ($this->isFullHouse()) {
+            return self::RankFullHouse;
+        }
+        if ($this->isFlush()) {
+            return self::RankFlush;
+        }
+        if ($this->isStraight()) {
+            return self::RankStraight;
+        }
+        if ($this->isThreeOfAKind()) {
+            return self::RankThreeOfAKind;
+        }
+        if ($this->isTwoPairs()) {
+            return self::RankTwoPairs;
+        }
+        if ($this->isPair()) {
+            return self::RankPairs;
+        }
+        return self::RankHighCard;
+    }
+
+    public function isBetterThan(Hand $candidate): bool {
+        $handComparison = $this->getHandRank() <=> $candidate->getHandRank();
+        if ($handComparison === -1) {
+            return false;
+        }
+        if ($handComparison === 1) {
+            return true;
+        }
+
+        for ($i = 0; $i < 5; $i++) {
+            if ($this->getHighCard($i)->getRank() > $candidate->getHighCard($i)->getRank()
+                && $candidate->getHighCard($i)->getRank() !== Rank::Ace) {
+                return true;
+            }
+            if ($this->getHighCard($i)->getRank() === Rank::Ace && $candidate->getHighCard($i)->getRank() !== Rank::Ace) {
+                return true;
+            }
+        }
+        return false;
     }
 }
