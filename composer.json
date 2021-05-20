@@ -26,5 +26,8 @@
 		"ext-dom": "*",
 		"ext-zlib": "*",
 		"phpunit/phpunit": "^9.5"
+	},
+	"require": {
+		"symfony/console": "^5.2"
 	}
 }
